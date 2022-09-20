@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color of the day</title>
+    <style>
+        html {
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        
+        #app {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        #label {
+            font-size: xx-large;
+            font-weight: bold;
+            letter-spacing: 0.25em;
+        }
+        
+        #d {
+            border: none;
+            font-size: xx-large;
+            font-weight: bold;
+        }
+        
+        #link {
+            letter-spacing: 0;
+            font-size: large;
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <div id="app">
+
+        <div id="label">
+            <h1>Color of the day</h1>
+            <input id='d' type='date' onchange='draw()' />
+            <p><a id='link' href='https://1link.fun/color-of-the-day'>What is this?</a></p>
+        </div>
+    </div>
+
+    <script>
+        Date.prototype.format = function(fmt) {
+            var o = {
+                "M+": this.getMonth() + 1,
+                "d+": this.getDate(),
+                "h+": this.getHours(),
+                "m+": this.getMinutes(),
+                "s+": this.getSeconds(),
+                "q+": Math.floor((this.getMonth() + 3) / 3),
+                S: this.getMilliseconds()
+            };
+            if (/(y+)/.test(fmt))
+                fmt = fmt.replace(
+                    RegExp.$1,
+                    (this.getFullYear() + "").substr(4 - RegExp.$1.length)
+                );
+            for (var k in o) {
+                if (new RegExp("(" + k + ")").test(fmt)) {
+                    fmt = fmt.replace(
+                        RegExp.$1,
+                        RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length)
+                    );
+                }
+            }
+            return fmt;
+        };
+
+        function draw() {
+            let d;
+            try {
+                d = new Date(document.querySelector("#d").value);
+            } catch (e) {
+                d = null;
+            }
+
+            if (!d) {
+                return;
+            }
+
+            let yymmdd = d.format("yyMMdd");
+            document.querySelector("#app").style.backgroundColor = "#" + yymmdd;
+
+            let arr = yymmdd.split("");
+            let r = [];
+            for (let i = 0; i < arr.length; i++) {
+                r[i] = 15 - arr[i];
+            }
+            let c = "";
+            for (let i = 0; i < r.length; i++) {
+                c += parseInt(r[i]).toString(16);
+            }
+            document.querySelector("#app").style.color = "#" + c;
+            document.querySelector("#d").style.color = "#" + c;
+            document.querySelector("#link").style.color = "#" + c;
+            document.querySelector("#d").style.backgroundColor = "#" + yymmdd;
+        }
+
+        document.querySelector("#d").value = new Date().format("yyyy-MM-dd");
+
+        draw();
+    </script>
+</body>
+
+</html>
